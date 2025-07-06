@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "@/pages/Home";
 import Wallet from "@/pages/Wallet";
-import SearchPage from "@/pages/search";
+import SearchPage from "@/pages/Search";
 import Profile from "@/pages/Profile";
 import "./App.css"; // optional
 
