@@ -6,7 +6,6 @@ import Wallet from "@/pages/Wallet";
 import SearchPage from "@/pages/Search";
 import Profile from "@/pages/Profile";
 import "./App.css";
- dcc7ab8493267304a6123d01b0f28bd294ecec1b
 
 function App() {
   return (
