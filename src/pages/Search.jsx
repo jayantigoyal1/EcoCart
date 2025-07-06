@@ -1,3 +1,4 @@
+
 // src/pages/Search.jsx
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";

@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { FaGift, FaTruck, FaLeaf, FaCoins } from "react-icons/fa";
 import { PiShoppingBagFill } from "react-icons/pi";
