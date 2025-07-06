@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="flex justify-center bg-gray-100 min-h-screen">
       <div className="w-full max-w-sm">
-        <Router>
+        <Router basename="/EcoCart">
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
