@@ -1,122 +1,137 @@
-
-// src/pages/Search.jsx
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Search as SearchIcon } from "lucide-react";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
+import { Search as SearchIcon } from "lucide-react";
 import { FaLeaf } from "react-icons/fa";
+
+// Categories to show on homepage
+const HOMEPAGE_CATEGORIES = [
+  "bag",
+  "toothbrush",
+  "bottle",
+  "container",
+  "plate",
+  "garbage bag",
+  "notebook",
+  "pen",
+  "grocery",
+  "straw",
+  "tshirt",
+  "pants",
+  "cutlery"
+];
+
+function ProductCard({ product }) {
+  return (
+    <div className="bg-white p-4 rounded-2xl shadow-md space-y-2 border border-emerald-100">
+      <div className="flex justify-between">
+        <h3 className="text-sm font-semibold text-emerald-900">
+          {product.title}
+        </h3>
+        <span className="bg-emerald-200 text-emerald-900 text-xs font-bold px-2 py-0.5 rounded-full">
+          {product.score}
+        </span>
+      </div>
+      <div className="bg-emerald-50 text-sm p-2 rounded-lg flex justify-between items-center text-emerald-800">
+        <div className="flex items-center gap-1">
+          <FaLeaf className="text-green-600" />
+          <span>Low Carbon Choice</span>
+        </div>
+        <span className="font-medium">~2.1 kg CO₂ saved</span>
+      </div>
+      <div className="flex justify-between items-center">
+        <p className="text-yellow-600 font-medium">Earn +85 pts</p>
+        <button
+          className="bg-emerald-600 text-white text-sm px-4 py-1 rounded-xl hover:bg-emerald-700 transition"
+          onClick={() => window.open(product.url, "_blank")}
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const recentSearches = ["Toothbrush", "Shampoo", "Reusable Bag"];
 
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ["products"],
+  const searchEnabled = searchQuery.trim().length > 0;
+
+  const { data: searchResults = [], isLoading: isSearchLoading } = useQuery({
+    queryKey: ["search", searchQuery],
     queryFn: () =>
-      fetch("http://127.0.0.1:5000/api/products").then((res) => res.json()),
+      fetch(
+        `http://127.0.0.1:5000/api/recommendations?category=${encodeURIComponent(
+          searchQuery
+        )}`
+      ).then((res) => res.json()),
+    enabled: searchEnabled,
   });
 
-  const filtered = products.filter((p) =>
-    (p.name + p.brand).toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Fetch each homepage category separately
+  const homepageRecommendations = useQueries({
+    queries: HOMEPAGE_CATEGORIES.map((category) => ({
+      queryKey: ["recommendation", category],
+      queryFn: () =>
+        fetch(
+          `http://127.0.0.1:5000/api/recommendations?category=${category}`
+        ).then((res) => res.json()),
+    })),
+  });
+
 
   return (
     <div className="p-4 space-y-4 pb-20">
-      {/* 🔍 Search Input */}
-      <div className="sticky top-0 bg-green-50 z-10 pb-2">
+      {/* Search bar */}
+      <div className="sticky top-0 bg-white z-10 pb-4">
         <div className="relative">
           <SearchIcon className="absolute left-3 top-3 text-emerald-500" />
           <Input
             placeholder="Search eco-friendly products..."
-            className="pl-10 bg-emerald-100 border border-emerald-300 placeholder-emerald-700 text-emerald-900"
+            className="pl-10 bg-emerald-100 border border-emerald-300 text-emerald-900"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
       </div>
 
-      {/* 🕘 Recent Searches */}
-      {searchQuery === "" && (
-        <div>
-          <h2 className="text-sm font-semibold text-emerald-800 mb-2">
-            Recent Searches
+      {/* Search Results */}
+      {searchEnabled ? (
+        <div className="space-y-4">
+          <h2 className="text-base font-semibold text-emerald-900">
+            Search Results
           </h2>
-          <div className="flex gap-2 flex-wrap">
-            {recentSearches.map((term) => (
-              <button
-                key={term}
-                className="bg-emerald-100 px-3 py-1 rounded-full text-sm text-emerald-800"
-                onClick={() => setSearchQuery(term)}
-              >
-                {term}
-              </button>
-            ))}
-          </div>
+
+          {isSearchLoading ? (
+            <p className="text-emerald-600">Loading...</p>
+          ) : searchResults.length === 0 ? (
+            <p className="text-red-600">No results found.</p>
+          ) : (
+            searchResults.map((product, i) => (
+              <ProductCard key={i} product={product} />
+            ))
+          )}
+        </div>
+      ) : (
+        // Homepage Recommendations
+        <div className="space-y-8">
+          {homepageRecommendations.map((query, index) => (
+            <div key={HOMEPAGE_CATEGORIES[index]}>
+              <h3 className="text-lg font-semibold mb-2 text-emerald-800">
+                Recommended for {HOMEPAGE_CATEGORIES[index]}
+              </h3>
+              {query.isLoading ? (
+                <p className="text-emerald-600">Loading...</p>
+              ) : (
+                query.data.map((product, i) => (
+                  <ProductCard key={i} product={product} />
+                ))
+              )}
+            </div>
+          ))}
+
         </div>
       )}
-
-      {/* ♻️ Product Results */}
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-base font-semibold text-emerald-900">
-            Products Found
-          </h2>
-          <span className="text-sm text-emerald-600">
-            {filtered.length} result{filtered.length !== 1 ? "s" : ""}
-          </span>
-        </div>
-
-        {isLoading && <p className="text-emerald-700">Loading products...</p>}
-
-        {!isLoading && filtered.length === 0 && (
-          <p className="text-emerald-700">No products match "{searchQuery}"</p>
-        )}
-
-        {filtered.map((product) => (
-          <div
-            key={product.id}
-            className="bg-white p-4 rounded-2xl shadow-md space-y-2 border border-emerald-100"
-          >
-            {/* Top row: name + ecoscore */}
-            <div className="flex justify-between">
-              <div>
-                <h3 className="text-sm font-semibold text-emerald-900">
-                  {product.name}
-                </h3>
-                <p className="text-xs text-emerald-700">{product.brand}</p>
-              </div>
-              <span className="bg-emerald-200 text-emerald-900 text-xs font-bold px-2 py-0.5 rounded-full">
-                {product.ecoScore ?? 90}
-              </span>
-            </div>
-
-            {/* Price */}
-            <div className="text-sm text-emerald-900 font-bold">
-              ₹{product.price ?? 0}{" "}
-              <span className="text-xs text-emerald-500 line-through">
-                ₹{product.originalPrice ?? 0}
-              </span>
-            </div>
-
-            {/* CO2 Info */}
-            <div className="bg-emerald-50 text-sm p-2 rounded-lg flex justify-between items-center text-emerald-800">
-              <div className="flex items-center gap-1">
-                <FaLeaf className="text-green-600" />
-                <span>Low Carbon Choice</span>
-              </div>
-              <span className="font-medium">-2.1 kg CO₂</span>
-            </div>
-
-            {/* Add to Cart */}
-            <div className="flex justify-between items-center">
-              <p className="text-yellow-600 font-medium">Earn +85 pts</p>
-              <button className="bg-emerald-600 text-white text-sm px-4 py-1 rounded-xl shadow-sm hover:bg-emerald-700 transition">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
