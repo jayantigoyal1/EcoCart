@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { FaGift, FaTruck, FaLeaf, FaCoins } from "react-icons/fa";
 import { PiShoppingBagFill } from "react-icons/pi";
@@ -42,10 +41,9 @@ export default function Wallet() {
   ];
 
   return (
-    <div className="p-4 pb-20 space-y-4">
+    <div className="p-4 pb-20 space-y-4 w-full">
       <h1 className="text-xl font-bold text-emerald-900 mb-2">Wallet</h1>
 
-      {/* Wallet Summary Card */}
       <div className="bg-emerald-100 p-4 rounded-xl shadow flex justify-between items-center">
         {isLoading ? (
           <p>Loading...</p>
@@ -68,7 +66,6 @@ export default function Wallet() {
         )}
       </div>
 
-      {/* Rewards Section */}
       <h2 className="text-base font-semibold text-emerald-900">Redeem Rewards</h2>
       <div className="space-y-3">
         {rewardItems.map((item) => (

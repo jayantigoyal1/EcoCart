@@ -1,14 +1,32 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FaLeaf, FaUserCircle } from "react-icons/fa";
 import { Search, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
+// 🧠 Eco Tips + Leaderboard Data
+const ECO_TIPS = [
+  "Carry a reusable water bottle 💧",
+  "Say no to plastic cutlery 🍴",
+  "Use cloth bags for groceries 🛍️",
+  "Unplug chargers when not in use 🔌",
+  "Buy in bulk to reduce packaging 📦",
+  "Compost your food waste ♻️",
+  "Take shorter showers 🚿",
+  "Air dry your clothes ☀️",
+];
+const todayTip = ECO_TIPS[new Date().getDate() % ECO_TIPS.length];
+
+const leaderboard = [
+  { name: "Aarav", score: 72.5 },
+  { name: "Meera", score: 65.2 },
+  { name: "Rishi", score: 61.9 },
+];
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
@@ -35,69 +53,107 @@ export default function Home() {
             <p className="text-xs opacity-80">Green Wallet</p>
             <p className="font-bold">2,450 pts</p>
           </div>
-          <FaUserCircle size={28} />
+          <Link to="/profile">
+            <FaUserCircle
+              size={28}
+              className="text-emerald-800 hover:text-emerald-500 transition-colors duration-200 cursor-pointer"
+            />
+          </Link>
+
         </div>
       </div>
 
       {/* 🔍 Search */}
       <div className="p-4">
-        <div className="relative">
+        <div className="relative" onClick={() => navigate("/search")}>
           <Search className="absolute left-3 top-3 text-emerald-500" />
           <Input
             placeholder="Search eco-friendly products..."
-            className="pl-10 bg-emerald-100 border border-emerald-300 placeholder-emerald-700 text-emerald-900"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-emerald-100 border border-emerald-300 placeholder-emerald-700 text-emerald-900 cursor-pointer"
+            readOnly
           />
         </div>
       </div>
 
-      {/* 🌱 Eco Impact */}
-      <div className="px-4">
-        <div className="bg-emerald-100 p-4 rounded-xl shadow">
-          <div className="flex justify-between items-center mb-2">
-            <p className="font-semibold text-emerald-900">Your Eco Impact</p>
-            <TrendingUp className="text-emerald-800 h-4 w-4" />
+      {/* 🌿 Eco Tip */}
+      <div className="px-4 mt-2">
+        <div className="bg-white border-l-4 border-emerald-500 p-4 rounded-xl shadow text-emerald-900">
+          <h3 className="font-semibold text-sm mb-1">🌱 Eco Tip of the Day</h3>
+          <p className="text-sm opacity-90">{todayTip}</p>
+        </div>
+      </div>
+
+      {/* 🌎 Eco Impact */}
+      <div className="px-4 mt-6">
+        <div className="bg-gradient-to-r from-emerald-100 to-green-50 p-5 rounded-2xl shadow-lg border border-emerald-200">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="text-emerald-700 w-5 h-5" />
+              <p className="font-semibold text-emerald-900 text-base">
+                Your Weekly Eco Impact
+              </p>
+            </div>
+            <span className="text-xs bg-white text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-300 shadow-sm">
+              🚀 Keep Going!
+            </span>
           </div>
-          <div className="flex justify-between text-center text-sm text-emerald-800">
-            <div>
-              <p className="text-lg font-bold text-emerald-900">47.20</p>
-              <p className="text-xs">kg CO₂ saved</p>
+
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="bg-white p-4 rounded-xl shadow border border-emerald-100">
+              <p className="text-2xl font-bold text-emerald-900">47.2</p>
+              <p className="text-xs text-emerald-600">kg CO₂ saved</p>
             </div>
-            <div>
-              <p className="text-lg font-bold text-emerald-900">23</p>
-              <p className="text-xs">Green purchases</p>
+            <div className="bg-white p-4 rounded-xl shadow border border-emerald-100">
+              <p className="text-2xl font-bold text-emerald-900">23</p>
+              <p className="text-xs text-emerald-600">Green purchases</p>
             </div>
-            <div>
-              <p className="text-lg font-bold text-yellow-600">₹340.00</p>
-              <p className="text-xs">Rewards earned</p>
+            <div className="bg-white p-4 rounded-xl shadow border border-emerald-100">
+              <p className="text-xl font-bold text-yellow-600">₹340</p>
+              <p className="text-xs text-yellow-700">Rewards earned</p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="px-4 mt-3">
+      {/* 📈 Weekly Stats Button */}
+      <div className="px-4 mt-6">
         <Link to="weekly-stats">
-          <button className="w-full bg-white border border-emerald-300 text-emerald-700 px-4 py-2 rounded-lg shadow hover:bg-emerald-50 transition-all">
+          <button className="w-full bg-emerald-600 text-white font-semibold text-lg px-4 py-4 rounded-xl shadow-md hover:bg-emerald-700 transition">
             📈 View Weekly Stats
           </button>
         </Link>
       </div>
 
+      {/* 🏆 Leaderboard */}
+      <div className="px-4 mt-6">
+        <div className="bg-emerald-100 border border-emerald-300 p-4 rounded-xl shadow">
+          <h3 className="text-emerald-900 font-semibold text-sm mb-2">
+            🏆 Top Eco Warriors
+          </h3>
+          <ul className="space-y-1 text-sm text-emerald-800">
+            {leaderboard.map((user, idx) => (
+              <li key={idx} className="flex justify-between">
+                <span>{idx + 1}. {user.name}</span>
+                <span className="font-semibold">{user.score} kg CO₂</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
 
       {/* 🛍️ Featured Products */}
-      <div className="p-4">
+      <div className="p-4 mt-6">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-base font-semibold text-emerald-900">
             Featured Products
           </h2>
           <Link to="/search">
-            <button className="text-emerald-700 text-sm font-medium hover:underline">
+            <button className="bg-emerald-600 text-white text-sm px-3 py-1 rounded-lg shadow hover:bg-emerald-700 transition">
               View All
             </button>
           </Link>
         </div>
-        
+
         <div className="space-y-4">
           {filteredProducts.map((product) => (
             <div

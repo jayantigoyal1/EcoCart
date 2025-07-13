@@ -10,12 +10,14 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-green-50 relative pb-16">
-      {/* 👇 This will render the child page (Home, Search, Wallet...) */}
-      <Outlet />
+      {/* ✅ Common container for all pages */}
+      <div className="max-w-md mx-auto w-full">
+        <Outlet />
+      </div>
 
       {/* 🚀 Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-inner flex justify-center z-10">
-        <div className="w-full max-w-sm flex justify-around p-2">
+      <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-inner z-10">
+        <div className="max-w-md mx-auto flex justify-around p-2">
           <NavItem to="/" label="Home" icon={<PiHouseFill />} active={pathname === "/"} />
           <NavItem to="/search" label="Search" icon={<SearchIcon />} active={pathname === "/search"} />
           <NavItem to="/wallet" label="Wallet" icon={<PiWalletFill />} active={pathname === "/wallet"} />
@@ -26,16 +28,20 @@ export default function Layout() {
   );
 }
 
+
 function NavItem({ to, icon, label, active }) {
   return (
     <Link
       to={to}
       className={`flex flex-col items-center px-4 py-1 rounded-xl transition ${
-        active ? "bg-black text-white" : "text-gray-500"
+        active
+          ? "bg-emerald-100 text-emerald-600 font-semibold"
+          : "text-gray-500 hover:text-emerald-500"
       }`}
     >
-      {icon}
+      <div className="text-lg">{icon}</div>
       <span className="text-xs">{label}</span>
     </Link>
   );
 }
+

@@ -1,4 +1,3 @@
-
 import { FaUserCircle, FaLeaf, FaSignOutAlt, FaEdit, FaQuestionCircle } from "react-icons/fa";
 import { FaCoins } from "react-icons/fa6";
 import { PiShoppingBagFill } from "react-icons/pi";
@@ -14,10 +13,9 @@ export default function Profile() {
   };
 
   return (
-    <div className="p-4 pb-20 space-y-6">
+    <div className="p-4 pb-20 space-y-4 w-full">
       <h1 className="text-xl font-bold text-emerald-900 mb-2">Profile</h1>
 
-      {/* 👤 User Info */}
       <div className="bg-white p-4 rounded-xl shadow flex items-center gap-4">
         <FaUserCircle size={48} className="text-emerald-700" />
         <div>
@@ -27,7 +25,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* 🌿 Eco Impact Section */}
       <div className="space-y-2">
         <h2 className="text-base font-semibold text-emerald-900">Your Eco Impact</h2>
         <div className="bg-emerald-100 p-4 rounded-xl shadow-sm grid grid-cols-3 text-center gap-2 text-emerald-800">
@@ -49,7 +46,6 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* ⚙️ Settings */}
       <div className="space-y-3">
         <SettingItem icon={<FaEdit />} label="Edit Profile" />
         <SettingItem icon={<FaQuestionCircle />} label="Help & Support" />
