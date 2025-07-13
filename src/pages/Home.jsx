@@ -50,7 +50,7 @@ export default function Home() {
         </div>
         <div className="flex items-center gap-3">
           <div className="text-sm text-right">
-            <p className="text-xs opacity-80">Green Wallet</p>
+            <p className="text-xs opacity-80">Green Warrior</p>
             <p className="font-bold">2,450 pts</p>
           </div>
           <Link to="/profile">
