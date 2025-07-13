@@ -4,6 +4,8 @@ import { useState } from "react";
 import { FaLeaf, FaUserCircle } from "react-icons/fa";
 import { Search, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,17 +76,28 @@ export default function Home() {
         </div>
       </div>
 
+      <div className="px-4 mt-3">
+        <Link to="weekly-stats">
+          <button className="w-full bg-white border border-emerald-300 text-emerald-700 px-4 py-2 rounded-lg shadow hover:bg-emerald-50 transition-all">
+            📈 View Weekly Stats
+          </button>
+        </Link>
+      </div>
+
+
       {/* 🛍️ Featured Products */}
       <div className="p-4">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-base font-semibold text-emerald-900">
             Featured Products
           </h2>
-          <button className="text-emerald-700 text-sm font-medium hover:underline">
-            View All
-          </button>
+          <Link to="/search">
+            <button className="text-emerald-700 text-sm font-medium hover:underline">
+              View All
+            </button>
+          </Link>
         </div>
-
+        
         <div className="space-y-4">
           {filteredProducts.map((product) => (
             <div

@@ -5,6 +5,7 @@ import Home from "@/pages/Home";
 import Wallet from "@/pages/Wallet";
 import SearchPage from "@/pages/Search";
 import Profile from "@/pages/Profile";
+import WeeklyStats from "@/pages/WeeklyStats";
 import "./App.css";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
               <Route path="search" element={<SearchPage />} />
               <Route path="wallet" element={<Wallet />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="weekly-stats" element={<WeeklyStats />} />
             </Route>
           </Routes>
         </Router>

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
-import { Search as SearchIcon } from "lucide-react";
 import { FaLeaf } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Search as SearchIcon } from "lucide-react";
+
 
 // Categories to show on homepage
 const HOMEPAGE_CATEGORIES = [
@@ -79,21 +81,36 @@ export default function SearchPage() {
     })),
   });
 
+  const navigate = useNavigate();
+
 
   return (
+
     <div className="p-4 space-y-4 pb-20">
-      {/* Search bar */}
+      {/* 🔍 Search bar + Back icon */}
       <div className="sticky top-0 bg-white z-10 pb-4">
-        <div className="relative">
-          <SearchIcon className="absolute left-3 top-3 text-emerald-500" />
-          <Input
-            placeholder="Search eco-friendly products..."
-            className="pl-10 bg-emerald-100 border border-emerald-300 text-emerald-900"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="flex items-center gap-2">
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="bg-emerald-100 border border-emerald-300 text-emerald-700 p-2 rounded-lg hover:bg-emerald-200 transition"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
+          <div className="relative flex-1">
+            <SearchIcon className="absolute left-3 top-3 text-emerald-500" />
+            <Input
+              placeholder="Search eco-friendly products..."
+              className="pl-10 bg-emerald-100 border border-emerald-300 text-emerald-900 w-full"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
       </div>
+
+
 
       {/* Search Results */}
       {searchEnabled ? (
